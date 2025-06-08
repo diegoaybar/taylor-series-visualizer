@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taylor Series Visualizer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
+  <!-- Load WebAssembly module -->
+  <script src="taylor.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    canvas {
+      max-width: 100%;
+      margin-top: 20px;
+    }
+    label, input, select, button {
+      margin: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    #polynomial {
+      font-family: monospace;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Taylor Series Visualizer</h1>
+    <label for="functionSelect">Select Function:</label>
+    <select id="functionSelect">
+      <option value="sin">sin(x)</option>
+      <option value="cos">cos(x)</option>
+      <option value="exp">e^x</option>
+    </select>
+    <br>
+    <label for="terms">Number of Terms: <span id="termsValue">1</span></label>
+    <input type="range" id="terms" min="0" max="10" value="1">
+    <br>
+    <label for="center">Center Point (a): <span id="centerValue">0</span></label>
+    <input type="range" id="center" min="-5" max="5" step="0.1" value="0">
+    <br>
+    <button onclick="updateGraph()">Update Graph</button>
+    <div id="polynomial"></div>
+    <canvas id="taylorChart"></canvas>
+  </div>
+
+  <script>
+    // Initialize Chart.js
+    const ctx = document.getElementById('taylorChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Original Function',
+            data: [],
+            borderColor: '#1e88e5',
+            fill: false
+          },
+          {
+            label: 'Taylor Approximation',
+            data: [],
+            borderColor: '#d81b60',
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: 'x' } },
+          y: { title: { display: true, text: 'y' } }
+        }
+      }
+    });
+
+    // WebAssembly module (loaded from taylor.js)
+    let wasmModule;
+    Module().then(module => {
+      wasmModule = module;
+      updateGraph();
+    });
+
+    // Generate x-values for plotting
+    function generateXValues() {
+      const xValues = [];
+      for (let x = -5; x <= 5; x += 0.1) {
+        xValues.push(x.toFixed(2));
+      }
+      return xValues;
+    }
+
+    // Evaluate original function using math.js
+    function evaluateFunction(func, x) {
+      try {
+        return math.evaluate(func, { x: x });
+      } catch (e) {
+        console.error('Error evaluating function:', e);
+        return 0;
+      }
+    }
+
+    // Update graph and polynomial display
+    function updateGraph() {
+      const func = document.getElementById('functionSelect').value;
+      const terms = parseInt(document.getElementById('terms').value);
+      const center = parseFloat(document.getElementById('center').value);
+      document.getElementById('termsValue').textContent = terms;
+      document.getElementById('centerValue').textContent = center.toFixed(1);
+
+      const xValues = generateXValues();
+      const originalData = xValues.map(x => evaluateFunction(func, parseFloat(x)));
+      const taylorData = xValues.map(x => {
+        if (wasmModule) {
+          if (func === 'sin') {
+            return wasmModule._taylorSin(parseFloat(x), center, terms);
+          } else if (func === 'cos') {
+            return wasmModule._taylorCos(parseFloat(x), center, terms);
+          } else if (func === 'exp') {
+            return wasmModule._taylorExp(parseFloat(x), center, terms);
+          }
+        }
+        return 0;
+      });
+
+      // Update polynomial display
+      let polynomial = '';
+      if (func === 'sin') {
+        polynomial = generateSinPolynomial(terms, center);
+      } else if (func === 'cos') {
+        polynomial = generateCosPolynomial(terms, center);
+      } else if (func === 'exp') {
+        polynomial = generateExpPolynomial(terms, center);
+      }
+      document.getElementById('polynomial').textContent = `Taylor Polynomial: ${polynomial}`;
+
+      // Update chart
+      chart.data.labels = xValues;
+      chart.data.datasets[0].data = originalData;
+      chart.data.datasets[1].data = taylorData;
+      chart.update();
+    }
+
+    // Generate polynomial strings (simplified for display)
+    function generateSinPolynomial(n, a) {
+      let terms = [];
+      for (let k = 0; k <= n; k++) {
+        if (k % 2 === 0) {
+          const sign = (k/2 % 2 === 0) ? '' : '-';
+          terms.push(`${sign}${Math.cos(a).toFixed(2)}*(x-${a})^${k}/${factorial(k)}`);
+        } else {
+          const sign = ((k-1)/2 % 2 === 0) ? '' : '-';
+          terms.push(`${sign}${Math.sin(a).toFixed(2)}*(x-${a})^${k}/${factorial(k)}`);
+        }
+      }
+      return terms.join(' + ');
+    }
+
+    function generateCosPolynomial(n, a) {
+      let terms = [];
+      for (let k = 0; k <= n; k++) {
+        if (k % 2 === 0) {
+          const sign = (k/2 % 2 === 0) ? '' : '-';
+          terms.push(`${sign}${Math.cos(a).toFixed(2)}*(x-${a})^${k}/${factorial(k)}`);
+        } else {
+          const sign = ((k-1)/2 % 2 === 0) ? '-' : '';
+          terms.push(`${sign}${Math.sin(a).toFixed(2)}*(x-${a})^${k}/${factorial(k)}`);
+        }
+      }
+      return terms.join(' + ');
+    }
+
+    function generateExpPolynomial(n, a) {
+      let terms = [];
+      const ea = Math.exp(a).toFixed(2);
+      for (let k = 0; k <= n; k++) {
+        terms.push(`${ea}*(x-${a})^${k}/${factorial(k)}`);
+      }
+      return terms.join(' + ');
+    }
+
+    function factorial(n) {
+      if (n === 0) return 1;
+      let result = 1;
+      for (let i = 1; i <= n; i++) result *= i;
+      return result;
+    }
+  </script>
+</body>
+</html>
