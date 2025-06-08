@@ -7,7 +7,6 @@ extern "C" {
     double result = 0.0;
     for (int k = 0; k <= n; k++) {
       if (k % 2 == 0) {
-        // Even terms: cos(a) * (x-a)^k / k!
         double term = std::cos(a);
         for (int i = 0; i < k; i++) term *= (x - a);
         for (int i = 1; i <= k; i++) term /= i;
@@ -17,7 +16,6 @@ extern "C" {
           result -= term;
         }
       } else {
-        // Odd terms: sin(a) * (x-a)^k / k!
         double term = std::sin(a);
         for (int i = 0; i < k; i++) term *= (x - a);
         for (int i = 1; i <= k; i++) term /= i;
@@ -36,7 +34,6 @@ extern "C" {
     double result = 0.0;
     for (int k = 0; k <= n; k++) {
       if (k % 2 == 0) {
-        // Even terms: cos(a) * (x-a)^k / k!
         double term = std::cos(a);
         for (int i = 0; i < k; i++) term *= (x - a);
         for (int i = 1; i <= k; i++) term /= i;
@@ -46,7 +43,6 @@ extern "C" {
           result -= term;
         }
       } else {
-        // Odd terms: -sin(a) * (x-a)^k / k!
         double term = -std::sin(a);
         for (int i = 0; i < k; i++) term *= (x - a);
         for (int i = 1; i <= k; i++) term /= i;
