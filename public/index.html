@@ -4,280 +4,81 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taylor Series Visualizer</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- KaTeX for LaTeX rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
-  <!-- Plotly.js for Desmos-like graphing -->
+  <!-- Plotly.js for graphing -->
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   <!-- Math.js for function evaluation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
   <!-- WebAssembly module -->
   <script src="taylor.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 900px;
-      padding: 20px;
-      background-color: #2d2d2d;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    }
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    select, input, button {
-      margin: 10px;
-      padding: 8px;
-      border-radius: 4px;
-      border: none;
-      background-color: #3c3c3c;
-      color: #e0e0e0;
-    }
-    select, input[type="range"] {
-      width: 200px;
-    }
-    button {
-      background-color: #1e88e5;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #1565c0;
-    }
-    label {
-      font-size: 0.9em;
-      margin-bottom: 5px;
-      text-align: center;
-    }
-    #polynomial {
-      margin: 20px 0;
-      font-size: 1.1em;
-      min-height: 50px;
-      text-align: center;
-    }
-    #taylorGraph {
-      width: 100%;
-      height: 400px;
-      background-color: #252525;
-      border: 1px solid #444;
-      border-radius: 4px;
-    }
-    .slider-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .slider-value {
-      font-size: 0.8em;
-      color: #1e88e5;
-    }
-  </style>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1 style="text-align: center;">Taylor Series Visualizer</h1>
-    <div class="controls">
-      <label for="functionSelect">Select Function:</label>
-      <select id="functionSelect" onchange="updateGraph()">
-        <option value="sin">sin(x)</option>
-        <option value="cos">cos(x)</option>
-        <option value="exp">e^x</option>
-      </select>
-      <div class="slider-container">
-        <label for="terms">n is the n-th Taylor polynomial, larger n = more accuracy</label>
-        <input type="range" id="terms" min="0" max="10" value="1" oninput="updateGraph()">
-        <span class="slider-value" id="termsValue">1</span>
+    <h1 class="text-center mb-4">Taylor Series Visualizer</h1>
+    <div class="card p-4 mb-4">
+      <div class="row g-3">
+        <div class="col-12 col-md-6 mx-auto">
+          <label for="functionSelect" class="form-label">Select Function</label>
+          <select id="functionSelect" class="form-select">
+            <option value="sin(x)">sin(x)</option>
+            <option value="cos(x)">cos(x)</option>
+            <option value="exp(x)">e^x</option>
+          </select>
+        </div>
       </div>
-      <div class="slider-container">
-        <label for="center">a is the base point of the approximation, where the radius of convergence will center. Slide it and watch the function almost 'crawl' left and right!</label>
-        <input type="range" id="center" min="-5" max="5" step="0.1" value="0" oninput="updateGraph()">
-        <span class="slider-value" id="centerValue">0.0</span>
+      <div class="row g-3 mt-2">
+        <div class="col-12 col-md-6">
+          <label for="terms" class="slider-label">n is the n-th Taylor polynomial, larger n = more accuracy</label>
+          <input type="range" class="form-range" id="terms" min="0" max="10" value="1">
+          <div class="text-center slider-value" id="termsValue">1</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="center" class="slider-label">a is the base point of the approximation, where the radius of convergence will center. Slide it and watch the function almost 'crawl' left and right!</label>
+          <input type="range" class="form-range" id="center" min="-5" max="5" step="0.1" value="0">
+          <div class="text-center slider-value" id="centerValue">0.0</div>
+        </div>
       </div>
-      <button onclick="resetGraph()">Reset</button>
+      <div class="text-center mt-3">
+        <button class="btn btn-primary" onclick="resetGraph()">Reset</button>
+      </div>
     </div>
-    <div id="polynomial"></div>
+    <div id="polynomial" class="card p-3"></div>
     <div id="taylorGraph"></div>
+    <div class="accordion mt-4" id="taylorInfo">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo">
+            Learn About Taylor Series
+          </button>
+        </h2>
+        <div id="collapseInfo" class="accordion-collapse collapse show" data-bs-parent="#taylorInfo">
+          <div class="accordion-body">
+            <h4>What is a Taylor Series?</h4>
+            <p id="whatIsTaylor"></p>
+            <h4>Why Are Taylor Series Important?</h4>
+            <p id="whyImportant"></p>
+            <h4>How to Calculate a Taylor Series?</h4>
+            <p id="howCalculate"></p>
+            <div id="generalFormula" class="text-center mb-3"></div>
+            <p id="sinExample"></p>
+            <h4>How is the Formula Derived?</h4>
+            <p id="howDerived"></p>
+            <h4>Effect of Adding More Terms</h4>
+            <p id="effectTerms"></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <script>
-    // WebAssembly module
-    let wasmModule;
-    let isWasmLoaded = false;
-
-    // Wait for WebAssembly to load before updating graph
-    Module().then(module => {
-      wasmModule = module;
-      isWasmLoaded = true;
-      updateGraph(); // Initial graph render
-    }).catch(err => {
-      console.error('Failed to load WebAssembly module:', err);
-    });
-
-    // Generate x-values
-    function generateXValues() {
-      const xValues = [];
-      for (let x = -5; x <= 5; x += 0.1) {
-        xValues.push(parseFloat(x.toFixed(2)));
-      }
-      return xValues;
-    }
-
-    // Evaluate original function
-    function evaluateFunction(func, x) {
-      try {
-        return math.evaluate(func, { x });
-      } catch (e) {
-        console.error('Error evaluating function:', e);
-        return 0;
-      }
-    }
-
-    // Debounce to prevent excessive updates
-    let debounceTimeout;
-    function debounceUpdateGraph() {
-      clearTimeout(debounceTimeout);
-      debounceTimeout = setTimeout(updateGraph, 100);
-    }
-
-    // Update graph and polynomial
-    function updateGraph() {
-      if (!isWasmLoaded) return; // Prevent updates until WASM is loaded
-
-      const func = document.getElementById('functionSelect').value;
-      const terms = parseInt(document.getElementById('terms').value);
-      const center = parseFloat(document.getElementById('center').value);
-      document.getElementById('termsValue').textContent = terms;
-      document.getElementById('centerValue').textContent = center.toFixed(1);
-
-      // Generate data
-      const xValues = generateXValues();
-      const originalData = xValues.map(x => evaluateFunction(func, x));
-      const taylorData = xValues.map(x => {
-        if (func === 'sin') {
-          return wasmModule._taylorSin(x, center, terms);
-        } else if (func === 'cos') {
-          return wasmModule._taylorCos(x, center, terms);
-        } else if (func === 'exp') {
-          return wasmModule._taylorExp(x, center, terms);
-        }
-        return 0;
-      });
-
-      // Update Plotly graph
-      Plotly.newPlot('taylorGraph', [
-        {
-          x: xValues,
-          y: originalData,
-          type: 'scatter',
-          mode: 'lines',
-          name: `Original (${func}(x))`,
-          line: { color: '#1e88e5' }
-        },
-        {
-          x: xValues,
-          y: taylorData,
-          type: 'scatter',
-          mode: 'lines',
-          name: `Taylor Polynomial (n=${terms})`,
-          line: { color: '#d81b60' }
-        }
-      ], {
-        margin: { t: 20 },
-        xaxis: { title: 'x', range: [-5, 5], gridcolor: '#444' },
-        yaxis: { title: 'y', range: [-5, 5], gridcolor: '#444' },
-        plot_bgcolor: '#252525',
-        paper_bgcolor: '#252525',
-        font: { color: '#e0e0e0' },
-        showlegend: true,
-        dragmode: 'zoom',
-        hovermode: 'closest'
-      }, { responsive: true });
-
-      // Render LaTeX polynomial
-      let polynomialLatex = '';
-      if (func === 'sin') {
-        polynomialLatex = generateSinPolynomialLatex(terms, center);
-      } else if (func === 'cos') {
-        polynomialLatex = generateCosPolynomialLatex(terms, center);
-      } else if (func === 'exp') {
-        polynomialLatex = generateExpPolynomialLatex(terms, center);
-      }
-      katex.render(`P_n(x) = ${polynomialLatex}`, document.getElementById('polynomial'), {
-        throwOnError: false,
-        displayMode: true
-      });
-    }
-
-    // Generate LaTeX polynomials
-    function generateSinPolynomialLatex(n, a) {
-      let terms = [];
-      for (let k = 0; k <= n; k++) {
-        const coef = k % 2 === 0 ? Math.cos(a).toFixed(2) : Math.sin(a).toFixed(2);
-        const sign = (k % 4 === 0 || k % 4 === 3) ? '' : '-';
-        const power = k === 0 ? '' : k === 1 ? `(x - ${a.toFixed(1)})` : `(x - ${a.toFixed(1)})^{${k}}`;
-        const denom = k === 0 ? '' : k === 1 ? '' : `\\frac{${coef}}{${factorial(k)}}`;
-        const term = (k === 0 || k === 1) ? `${sign}${coef}${power}` : `${sign}${denom}${power}`;
-        if (coef !== '0.00') terms.push(term);
-      }
-      return terms.join(' + ');
-    }
-
-    function generateCosPolynomialLatex(n, a) {
-      let terms = [];
-      for (let k = 0; k <= n; k++) {
-        const coef = k % 2 === 0 ? Math.cos(a).toFixed(2) : -Math.sin(a).toFixed(2);
-        const sign = (k % 4 === 0 || k % 4 === 3) ? '' : '-';
-        const power = k === 0 ? '' : k === 1 ? `(x - ${a.toFixed(1)})` : `(x - ${a.toFixed(1)})^{${k}}`;
-        const denom = k === 0 ? '' : k === 1 ? '' : `\\frac{${Math.abs(coef).toFixed(2)}}{${factorial(k)}}`;
-        const term = (k === 0 || k === 1) ? `${sign}${Math.abs(coef).toFixed(2)}${power}` : `${sign}${denom}${power}`;
-        if (coef !== '0.00') terms.push(term);
-      }
-      return terms.join(' + ');
-    }
-
-    function generateExpPolynomialLatex(n, a) {
-      let terms = [];
-      const ea = Math.exp(a).toFixed(2);
-      for (let k = 0; k <= n; k++) {
-        const power = k === 0 ? '' : k === 1 ? `(x - ${a.toFixed(1)})` : `(x - ${a.toFixed(1)})^{${k}}`;
-        const term = k === 0 ? `${ea}` : k === 1 ? `${ea}${power}` : `\\frac{${ea}}{${factorial(k)}}${power}`;
-        terms.push(term);
-      }
-      return terms.join(' + ');
-    }
-
-    function factorial(n) {
-      if (n === 0) return 1;
-      let result = 1;
-      for (let i = 1; i <= n; i++) result *= i;
-      return result;
-    }
-
-    // Reset graph to default
-    function resetGraph() {
-      document.getElementById('terms').value = 1;
-      document.getElementById('center').value = 0;
-      document.getElementById('functionSelect').value = 'sin';
-      updateGraph();
-    }
-
-    // Attach debounced event listeners
-    document.getElementById('terms').addEventListener('input', debounceUpdateGraph);
-    document.getElementById('center').addEventListener('input', debounceUpdateGraph);
-    document.getElementById('functionSelect').addEventListener('change', debounceUpdateGraph);
-  </script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="script.js"></script>
 </body>
 </html>
