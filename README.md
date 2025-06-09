@@ -1,6 +1,6 @@
 # Taylor Series Visualizer
 
-An interactive and educational tool to visualize Taylor series approximations for mathematical functions like \( \sin(x) \), \( \cos(x) \), and \( e^x \), with a modern, responsive interface.
+An interactive and educational tool to visualize Taylor series approximations for mathematical functions like $sin(x)$, $cos(x)$, and $e^x$, with a modern, responsive interface.
 
 ![Taylor Series Visualizer](assets/images/taylor-series-screenshot.png)
 
@@ -27,4 +27,4 @@ An interactive and educational tool to visualize Taylor series approximations fo
 - **Math.js**: Function evaluation
 - **WebAssembly**: Fast Taylor series calculations
 
-Built with HTML, CSS, JavaScript, WebAssembly, Plotly.js, KaTeX, and Bootstrap by [Diego Aybar](https://github.com/diegoaybar).
+Built with HTML, CSS, JavaScript, WebAssembly, Plotly.js, KaTeX, and Bootstrap by [Diego Aybar](https://github.com/diegoaybar)
