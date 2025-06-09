@@ -53,9 +53,7 @@
   <li>At \\( x = a \\), \\( P_n(a) = c_0 \\), so set \\( c_0 = f(a) \\).</li>
   <li>First derivative: \\( P_n'(x) = c_1 + 2c_2(x - a) + \\cdots \\), so \\( P_n'(a) = c_1 = f'(a) \\).</li>
   <li>Second derivative: \\( P_n''(x) = 2c_2 + \\cdots \\), so \\( P_n''(a) = 2c_2 = f''(a) \\), thus \\( c_2 = \\frac{f''(a)}{2!} \\).</li>
-  <li>Generally, \\( c_n = \\frac{f^{(n)}(a)}{n!} \\).</li>
-</ul>
-This ensures \\( P_n(x) \\) “spoons” with \\( f(x) \\) at \\( x = a \\), as 3Blue1Brown describes.`,
+  <li>Generally, \\( c_n = \\frac{f^{(n)}(a)}{n!} \\).</li>`,
         effectTerms: `Adding more terms (increasing \\( n \\)) makes the Taylor polynomial closer to \\( f(x) \\) near \\( a \\). Each term accounts for a higher-order derivative, refining how the polynomial's slope and curvature match the function. For example, the series for \\( \\cos(x) \\) at \\( a = 0 \\) starts as \\( 1 - \\frac{x^2}{2} \\), then adds \\( \\frac{x^4}{24} \\), improving accuracy. However, the series may only converge within a certain radius of convergence (e.g., \\( \\ln(x) \\) converges for \\( 0 < x \\leq 2 \\) when centered at \\( a = 1 \\)). Explore this visualizer to see how the polynomial “hugs” the function!`
       };
 
