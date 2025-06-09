@@ -11,9 +11,9 @@ An interactive and educational tool to visualize Taylor series approximations fo
 [Taylor Series Visualizer](https://diegoaybar.github.io/taylor-series-visualizer/public/)
 
 ## Features
-- Visualize Taylor polynomial approximations for \( \sin(x) \), \( \cos(x) \), and \( e^x \)
-- Adjust the number of terms (\( n \)) and center point (\( a \)) with intuitive sliders
-- Rectangular graph with \( \pi:1 \) grid for trigonometric functions and 1:1 grid for \( e^x \)
+- Visualize Taylor polynomial approximations for $sin(x)$, $cos(x)$, and $e^x$
+- Adjust the number of terms $n$ and center point $a$ with intuitive sliders
+- Rectangular graph with $pi:1$ grid for trigonometric functions and 1:1 grid for $e^x$
 - LaTeX-rendered polynomials and formulas for clear mathematical display
 - Optimized JavaScript for fast graph rendering using Plotly.js and WebAssembly
 - Detailed explanations of Taylor series, their derivation, and applications in physics and engineering
