@@ -36,7 +36,7 @@
         whyImportant: `Taylor series translate derivative information at a single point into an approximation of the function near that point. They're used in physics (e.g., pendulum energy), engineering (e.g., signal processing), and numerical methods because polynomials are computationally friendly. The more terms you include, the closer the approximation, but there's a tradeoff with complexity. For functions like \\( e^x \\), the series converges for all \\( x \\), while others, like \\( \\ln(x) \\), have a limited radius of convergence.`,
         howCalculate: `The Taylor series for a function \\( f(x) \\) centered at \\( a \\) is computed by:
 <ol>
-  <li>Finding the function's derivatives: \\( f(a) \\), \\( f'(a) \\), \\( f''(a) \\), \\ldots, \\( f^{(n)}(a) \\).</li>
+  <li>Finding the function's derivatives: \\( f(a) \\), \\( f'(a) \\), \\( f''(a) \\), \\cdots, \\( f^{(n)}(a) \\).</li>
   <li>Evaluating each derivative at \\( x = a \\).</li>
   <li>Dividing each by \\( n! \\) (factorial) to get the coefficient of \\( (x - a)^n \\).</li>
   <li>Summing the terms: \\( f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^2 + \\cdots \\).</li>
