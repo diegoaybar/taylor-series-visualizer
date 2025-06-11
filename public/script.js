@@ -148,7 +148,7 @@
       const tickvals = [-3*Math.PI, -5*Math.PI/2, -2*Math.PI, -3*Math.PI/2, -Math.PI, -Math.PI/2, 0, Math.PI/2, Math.PI, 3*Math.PI/2, 2*Math.PI, 5*Math.PI/2, 3*Math.PI];
       const ticktext = ['-3π', '-5π/2', '-2π', '-3π/2', '-π', '-π/2', '0', 'π/2', 'π', '3π/2', '2π', '5π/2', '3π'];
 
-      // Update Plotly graph
+// Update Plotly graph
       const traces = [
         {
           x: xValues,
@@ -156,7 +156,7 @@
           type: 'scatter',
           mode: 'lines',
           name: `Original ${func}`,
-          line: { color: '#2196f3', width: 2 }
+          line: { color: '#5b42f3', width: 2 }
         },
         {
           x: xValues,
@@ -164,7 +164,7 @@
           type: 'scatter',
           mode: 'lines',
           name: `Taylor Polynomial (n=${terms})`,
-          line: { color: '#e91e63', width: 2 }
+          line: { color: '#a8a1d6', width: 2 }
         }
       ];
 
@@ -173,28 +173,28 @@
         xaxis: {
           title: 'x',
           range: [-Math.PI, Math.PI],
-          gridcolor: '#555',
-          zerolinecolor: '#e0e0e0',
+          gridcolor: '#3a2b4d',
+          zerolinecolor: '#e6e1f5',
           zerolinewidth: 2,
           tickvals: tickvals,
           ticktext: ticktext,
-          tickfont: { color: '#e0e0e0' }
+          tickfont: { color: '#e6e1f5' }
         },
         yaxis: {
           title: 'y',
           range: [-2, 2],
-          gridcolor: '#555',
-          zerolinecolor: '#e0e0e0',
+          gridcolor: '#3a2b4d',
+          zerolinecolor: '#e6e1f5',
           zerolinewidth: 2,
-          tickfont: { color: '#e0e0e0' },
+          tickfont: { color: '#e6e1f5' },
           scaleanchor: 'x',
           scaleratio: Math.PI
         },
-        plot_bgcolor: '#252525',
-        paper_bgcolor: '#252525',
-        font: { color: '#e0e0e0', size: 12 },
+        plot_bgcolor: '#180a22',
+        paper_bgcolor: '#180a22',
+        font: { color: '#e6e1f5', size: 12 },
         showlegend: true,
-        legend: { x: 0, y: 1.1, orientation: 'h', font: { color: '#e0e0e0' } },
+        legend: { x: 0, y: 1.1, orientation: 'h', font: { color: '#e6e1f5' } },
         dragmode: 'pan',
         hovermode: 'closest'
       };
